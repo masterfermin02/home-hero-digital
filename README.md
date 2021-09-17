@@ -27,6 +27,10 @@ This project is for hero digital test
 
 In the project directory, you can run:
 
+### `yarn install` or `npm install`
+
+This command allow to install the frontend dependencies.
+
 ### `yarn start`
 
 Runs the app in the development mode.\
