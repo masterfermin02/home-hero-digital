@@ -1,8 +1,9 @@
 # Hero digital
 
-This project was hero digital test
+This project is for hero digital test
 
 ## Project Structure
+```
 .
 ├── public # Icludes public files of the frontend
 ├── src
@@ -21,7 +22,7 @@ This project was hero digital test
     ├── request.js # Request service to do the http request
     ├── .gitiignore
     ├── package.json
-
+```
 ## Available Scripts
 
 In the project directory, you can run:
