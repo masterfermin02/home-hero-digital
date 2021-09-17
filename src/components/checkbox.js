@@ -11,6 +11,7 @@ const Checkbox = (props) => {
             checked={props.checked}
             className="css-checkbox"
           />
+          <i></i>
           <span>{props.label}</span>
         </label>
         {props.error && <div className="form__error">{props.error}</div>}
