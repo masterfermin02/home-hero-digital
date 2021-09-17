@@ -9,6 +9,7 @@ const Checkbox = (props) => {
             value={props.value}
             onChange={(e) => props.onChange(e, props.relatedFieldName)}
             checked={props.checked}
+            className="css-checkbox"
           />
           <span>{props.label}</span>
         </label>

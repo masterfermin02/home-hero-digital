@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input from './input';
 import Select from './select';
 import Checkbox from './checkbox';
 import useForm from '../hooks/useForm';
 import validate from '../utils/validate';
+import postData from '../request';
 
 const initialState = {
     firstName: {
@@ -43,30 +44,43 @@ const initialState = {
 
 const Form = () => {
 
-    const { formData, errors, changeHandler, setErrors } = useForm(initialState, validate);
+    const { formData, errors, changeHandler, setErrors, setFormData } = useForm(initialState, validate);
+    const [reponseStatus, setResponseStatus] = useState({});
+
     const submit = (e) => {
         e.preventDefault();
         let newErrors = validate(formData, true);
         setErrors(newErrors);
         if(Object.keys(newErrors).length === 0) {
-            const data = new FormData();
-            data.append('firstName', formData.firstName.value);
-            data.append('lastName', formData.lastName.value);
-            data.append('email', formData.email.value);
-            data.append('org', formData.org.value);
-            data.append('euResident', formData.euResident.value);
+            const data = {};
+            data['firstName'] = formData.firstName.value;
+            data['lastName'] = formData.lastName.value;
+            data['email'] = formData.email.value;
+            data['org'] = formData.org.value;
+            data['euResident'] = formData.euResident.value;
             Object.keys(formData.checkBoxValidation.fields).forEach((field) => {
-                data.append(field, formData.checkBoxValidation.fields[field])
+                data[field] = formData.checkBoxValidation.fields[field];
             });
-            console.log('form can be submitted...');
-            for(let pair of data.entries()) {
-                console.log(`${pair[0]}:`, pair[1]);
-            }
+            postData('http://localhost:3000/api/subscription', data)
+            .then(data => setResponseStatus(data))
+            .catch(() => {
+                setResponseStatus({ 
+                    "status": "error", 
+                    "message": "Invalid Subscription request." 
+                  });
+            });
         }
     }
 
+    const onReset = (e) => {
+        e.preventDefault();
+        setFormData(initialState);
+    }
+
     return (
-        <form className="form" onSubmit={submit}>
+        <div>
+            {reponseStatus.status && <div className="padding-40">{reponseStatus.message}</div>}
+            {!reponseStatus.status && <form className="form" onSubmit={submit}>
             <div className="flex">
                 <div className="flex-1">
                   {errors.firstName && <span className="form__error">{errors.firstName}</span>}
@@ -84,6 +98,7 @@ const Form = () => {
                 value={formData.firstName.value}
                 onChange={changeHandler}
                 error={errors.firstName}
+                autoComplete="on"
               />
               <Input 
                 id="last-name"
@@ -93,6 +108,7 @@ const Form = () => {
                 value={formData.lastName.value}
                 onChange={changeHandler}
                 error={errors.lastName}
+                autoComplete="on"
               />
             </div>
             <div className="flex">
@@ -109,6 +125,7 @@ const Form = () => {
                 value={formData.email.value}
                 onChange={changeHandler}
                 error={errors.email}
+                autoComplete="one"
               />
               <Input 
                 id="org"
@@ -169,15 +186,16 @@ const Form = () => {
                     relatedFieldName="checkBoxValidation"
                 />
             </div>
-            <div className="flex">
+            <div className="flex-btn">
               <div >
-                <button className="btn rounded-full">SUBMIT</button>
+                <button aria-label="Submit the form" className="btn rounded-full">SUBMIT</button>
               </div>
               <div className="marging-x-10">
-                <button className="btn btn-default rounded-full">RESET</button>
+                <button aria-label="Reset the form" className="btn btn-default rounded-full" onClick={onReset} >RESET</button>
               </div>
             </div>
-          </form>
+          </form>}
+        </div>
     );
 };
 

@@ -1,6 +1,6 @@
 import Form from './components/form';
 import './App.scss';
-import validate from './utils/validate';
+import { validateEmail } from './utils/validate';
 
 import { createServer } from "miragejs"
 
@@ -8,8 +8,8 @@ createServer({
   routes() {
     this.post("/api/subscription", (schema, request) => {
       let attrs = JSON.parse(request.requestBody);
-      let newErrors = validate(attrs, true);
-      if(Object.keys(newErrors).length > 0) {
+      
+      if(!validateEmail(attrs['email'])) {
         return { 
           "status": "error", 
           "message": "Invalid Subscription request." 

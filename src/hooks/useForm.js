@@ -58,7 +58,7 @@ const useForm = (initialState, validate) => {
     setDataAndErrors(updatedData, e.target.name);
   }, [setDataAndErrors, formData]);
   return {
-    formData, errors, changeHandler, setErrors
+    formData, errors, changeHandler, setErrors, setFormData
   };
 }
 export default useForm;

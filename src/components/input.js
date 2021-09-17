@@ -9,7 +9,7 @@ const Input = (props) => {
             type={props.type || 'text'} 
             name={props.name} 
             id={props.id} 
-            autoComplete="off" 
+            autoComplete={props.autoComplete || "off"}
             value={props.value}
             onChange={props.onChange}
             placeholder={props.placeholder}
